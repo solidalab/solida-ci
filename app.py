@@ -1,3 +1,3 @@
 def topla(a, b):
-    a = a + 1
+    a = a + 2
     return a + b
