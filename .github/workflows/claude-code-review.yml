@@ -41,7 +41,7 @@ jobs:
           prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
           claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
           # Temporary: show the real error message in the logs; remove once fixed
-          show_full_output: true
+          show_full_output: false
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
