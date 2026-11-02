@@ -1,0 +1,32 @@
+name: Ollama Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+concurrency:
+  group: ollama-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ollama-review:
+    # Fork'tan gelen PR'lar self-hosted runner'da (yani Mac'te) kod çalıştırmasın
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft
+
+    runs-on: self-hosted
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Ollama review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL || 'qwen3:14b' }}
+        run: python3 scripts/ollama_review.py ${{ github.event.pull_request.number }}
